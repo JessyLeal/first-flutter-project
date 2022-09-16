@@ -88,7 +88,7 @@ class _RandomWordsState extends State<RandomWords> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color.fromARGB(255, 244, 177, 54),
+          backgroundColor: Color.fromARGB(255, 54, 244, 219),
           child:
               Icon(_viewType == ViewType.grid ? Icons.grid_view : Icons.list),
           onPressed: () {
