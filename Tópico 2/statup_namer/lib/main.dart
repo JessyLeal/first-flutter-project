@@ -9,19 +9,6 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final wordPair = WordPair.random(); // Add this line.
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: RandomWords(),
-    );
-  }
-}
-
 class RandomWords extends StatefulWidget {
   const RandomWords({Key? key}) : super(key: key);
 
@@ -29,19 +16,79 @@ class RandomWords extends StatefulWidget {
   State<RandomWords> createState() => _RandomWordsState();
 }
 
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override 
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Startup Name Generator',
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 54, 244, 86),
+          foregroundColor: Color.fromARGB(255, 0, 0, 0),
+        ),
+      ),
+      home: const RandomWords(),
+    );
+  }
+}
+
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18);
   ViewType _viewType = ViewType.list;
+  final _saved = <WordPair>{};
+  final _biggerFont = const TextStyle(fontSize: 18);
   int _colum = 1;
+
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          final tiles = _saved.map(
+            (pair) {
+              return ListTile(
+                title: Text(
+                  pair.asPascalCase,
+                  style: _biggerFont,
+                ),
+              );
+            },
+          );
+          final divided = tiles.isNotEmpty
+              ? ListTile.divideTiles(
+                  context: context,
+                  tiles: tiles,
+                ).toList()
+              : <Widget>[];
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Favoritados'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Statup Name Genaretor'),
+        title: const Text('Startup Name Generator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: _pushSaved,
+            tooltip: 'Favoritados',
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 10, 248, 157),
           child:
               Icon(_viewType == ViewType.grid ? Icons.grid_view : Icons.list),
           onPressed: () {
@@ -60,7 +107,7 @@ class _RandomWordsState extends State<RandomWords> {
 
   Widget _buildSuggestions() {
     return GridView.builder(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(4.0),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: _colum,
         childAspectRatio: _viewType == ViewType.grid ? 1 : 10,
@@ -70,11 +117,35 @@ class _RandomWordsState extends State<RandomWords> {
           return const Divider();
         }
 
-        final index = i ~/ 2;
+        final index = i ~/ 1;
         if (index >= _suggestions.length) {
           _suggestions.addAll(generateWordPairs().take(10));
         }
-        return _buildRow(_suggestions[index]);
+
+        final alreadySaved =
+              _saved.contains(_suggestions[index]); //análogo a um state
+          return ListTile(
+            title: Text(
+              _suggestions[index].asPascalCase,
+              style: _biggerFont,
+            ),
+            trailing: Icon(
+              alreadySaved ? Icons.favorite : Icons.favorite_border,
+              color:
+                  alreadySaved ? Color.fromARGB(255, 176, 10, 182) : null,
+              semanticLabel:
+                  alreadySaved ? 'Remove from saved' : 'Save', 
+            ),
+            onTap: () {
+              setState(() {
+                if (alreadySaved) {
+                  _saved.remove(_suggestions[index]);
+                } else {
+                  _saved.add(_suggestions[index]);
+                }
+              });
+            },
+          );
       },
     );
   }
@@ -93,7 +164,6 @@ class _RandomWordsState extends State<RandomWords> {
       return ListTile(
         title: Text(
           pair.asPascalCase,
-          // style: _biggerFont,
         ),
       );
     }
