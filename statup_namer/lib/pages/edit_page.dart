@@ -35,7 +35,7 @@ class _EditionText extends State<EditionText> {
       ),
     );
   }
-""
+
   Widget _build() {
     return Column(
       children: [
