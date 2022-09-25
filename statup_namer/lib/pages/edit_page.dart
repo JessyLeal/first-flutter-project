@@ -1,27 +1,26 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-class EditionText extends StatefulWidget {
+
+class TextEdt extends StatefulWidget {
+  TextEdt({required this.words, required this.index});
   List<String> words;
   int index;
-
-  EditionText({required this.words, required this.index});
-
   @override
-  _EditionText createState() => _EditionText();
+  _TextEdt createState() => _TextEdt();
 }
 
-class _EditionText extends State<EditionText> {
+class _TextEdt extends State<TextEdt> {
   List<String> words = [];
   String initialWord = '';
   int index = 0;
-  final txtController = TextEditingController(text: '');
+  final controller = TextEditingController(text: '');
 
   void initState() {
     super.initState();
     words = widget.words;
     index = widget.index;
     initialWord = words[widget.index];
-    txtController.text = initialWord;
+    controller.text = initialWord;
   }
 
   @override
@@ -42,7 +41,7 @@ class _EditionText extends State<EditionText> {
         Padding(
           padding: new EdgeInsets.all(10.0),
           child: TextFormField(
-            controller: txtController,
+            controller: controller,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
             ),
@@ -52,7 +51,7 @@ class _EditionText extends State<EditionText> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             OutlinedButton(
-              child: const Text('Voltar'),
+              child: const Text('BACK'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -60,9 +59,9 @@ class _EditionText extends State<EditionText> {
             SizedBox(width: 15),
             ElevatedButton(
               onPressed: () {
-                words[index] = txtController.text;
+                words[index] = controller.text;
               },
-              child: const Text('Salvar'),
+              child: const Text('SAVE'),
             ),
           ],
         )

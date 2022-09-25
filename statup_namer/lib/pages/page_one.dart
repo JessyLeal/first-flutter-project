@@ -115,7 +115,7 @@ class _RandomWordsState extends State<RandomWords> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditionText(
+                      builder: (context) => TextEdt(
                         words: _word,
                         index: index,
                       ),
