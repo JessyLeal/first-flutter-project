@@ -2,9 +2,12 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
 class TextEdt extends StatefulWidget {
-  TextEdt({required this.words, required this.index});
   List<String> words;
   int index;
+  bool isEdit;
+
+  TextEdt({required this.words, required this.index, required this.isEdit});
+
   @override
   _TextEdt createState() => _TextEdt();
 }
@@ -13,13 +16,15 @@ class _TextEdt extends State<TextEdt> {
   List<String> words = [];
   String initialWord = '';
   int index = 0;
+  bool isEdit = false;
   final controller = TextEditingController(text: '');
 
   void initState() {
     super.initState();
     words = widget.words;
     index = widget.index;
-    initialWord = words[widget.index];
+    isEdit = widget.isEdit;
+    initialWord = widget.isEdit ? words[widget.index] : '';
     controller.text = initialWord;
   }
 
@@ -27,15 +32,15 @@ class _TextEdt extends State<TextEdt> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Startup Genarator Names'),
+        title: const Text('Gerador de Nomes'),
       ),
       body: Container(
-        child: _build(),
+        child: _buil(),
       ),
     );
   }
 
-  Widget _build() {
+  Widget _buil() {
     return Column(
       children: [
         Padding(
@@ -51,7 +56,7 @@ class _TextEdt extends State<TextEdt> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             OutlinedButton(
-              child: const Text('BACK'),
+              child: const Text('Voltar'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -59,9 +64,14 @@ class _TextEdt extends State<TextEdt> {
             SizedBox(width: 15),
             ElevatedButton(
               onPressed: () {
-                words[index] = controller.text;
+                if (isEdit) {
+                  words[index] = controller.text;
+                } else {
+                  words.add(controller.text);
+                  Navigator.pop(context);
+                }
               },
-              child: const Text('SAVE'),
+              child: Text(isEdit ? 'SAVE' : 'CREATE'),
             ),
           ],
         )

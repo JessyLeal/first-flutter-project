@@ -116,8 +116,7 @@ class _RandomWordsState extends State<RandomWords> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TextEdt(
-                        words: _word,
-                        index: index,
+                        words: _word, index: index, isEdit: true,
                       ),
                     )).then((_) => setState(() {}));
               },
