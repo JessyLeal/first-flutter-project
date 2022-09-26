@@ -1,4 +1,5 @@
 import 'package:english_words/english_words.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TextEdt extends StatefulWidget {
@@ -11,6 +12,13 @@ class TextEdt extends StatefulWidget {
   @override
   _TextEdt createState() => _TextEdt();
 }
+
+  Future createLanguage({required String name}) async {
+    final docLanguage =
+        FirebaseFirestore.instance.collection('languages').doc();
+    final language = {'name': name, 'id': docLanguage.id};
+    await docLanguage.set(language);
+  }
 
 class _TextEdt extends State<TextEdt> {
   List<String> words = [];
@@ -35,12 +43,12 @@ class _TextEdt extends State<TextEdt> {
         title: const Text('Gerador de Nomes'),
       ),
       body: Container(
-        child: _buil(),
+        child: _build(),
       ),
     );
   }
 
-  Widget _buil() {
+  Widget _build() {
     return Column(
       children: [
         Padding(
@@ -79,3 +87,4 @@ class _TextEdt extends State<TextEdt> {
     );
   }
 }
+
